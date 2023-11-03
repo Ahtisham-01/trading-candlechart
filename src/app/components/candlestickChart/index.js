@@ -11,9 +11,6 @@ const CandlestickChart = ({ candlestickData }) => {
       height: 800,
       localization: en,
     });
-
-
-      
     // function generateRandomDataPoint() {
     //     const time = Date.now() - Math.floor(Math.random() * 10000); // Generate a random timestamp
     //     const open = Math.random() * 100 + 50; // Random open price between 50 and 150
