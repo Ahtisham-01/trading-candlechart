@@ -16,5 +16,10 @@
   }
 }
 
-
+/* styles.css */
+.chart-container {
+  width: 100%; /* Set the container width to 100% of its parent element */
+  max-width: 1200px; /* You can adjust the max-width to your desired maximum width */
+  margin: 0 auto; /* Center the chart container horizontally */
+}
 
