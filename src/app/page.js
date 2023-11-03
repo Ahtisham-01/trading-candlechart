@@ -32,7 +32,7 @@ export default function Home() {
     <React.Fragment>
       <div className="w-full h-screen  p-8">
         <p className="text-5xl text-center py-4 w-full font-bold">MT TRADING</p>
-        <div className="w-full   flex  gap-5 ">
+        <div className="w-full   flex flex-col md:flex-row  gap-5 ">
           <div className="w-full flex flex-col gap-3  shadow-md bg-slate-50 rounded-sm p-5">
           <span className="text-3xl text-black font-bold">Candle chart</span>
           <CandlestickChart candlestickData={candlestickData} />
