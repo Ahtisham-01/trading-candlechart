@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import {
   createChart,
-  UTCTimestamp,
   PriceScaleMode,
   en,
 } from "lightweight-charts";
