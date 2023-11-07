@@ -1,31 +1,13 @@
-
 import React, { useEffect, useRef } from "react";
 import { createChart, PriceScaleMode, en } from "lightweight-charts";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-const CandlestickChart = () => {
-  const socketUrl = "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
+const CandlestickChart = ({lastMessage}) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candlestickSeriesRef = useRef(null);
   const candlesRef = useRef([]);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    shouldReconnect: (closeEvent) => true, // Will attempt to reconnect on all close events
-  });
-
-  // Only subscribe once when the WebSocket is first opened
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      console.log("WebSocket Connected");
-      sendMessage(
-        JSON.stringify({
-          op: "subscribe",
-          args: [{ instId: "BTC-USD-SWAP", channel: "mark-price-candle1m" }],
-        })
-      );
-    }
-  }, [readyState, sendMessage]);
 
   // Initialize the chart and series on component mount
   useEffect(() => {
@@ -33,31 +15,26 @@ const CandlestickChart = () => {
       width: containerRef.current.clientWidth,
       height: 800,
       localization: en,
-      
     });
     candlestickSeriesRef.current = chartRef.current.addCandlestickSeries({
       timeScale: {
         timeVisible: true,
         secondsVisible: true,
       },
-      
     });
     chartRef.current.timeScale().applyOptions({
       barSpacing: 15, // Increase or decrease this value to adjust candle width
-      
     });
     return () => {
       chartRef.current.remove(); // Clean up on component unmount
     };
   }, []);
-
   // Update candles and chart with new WebSocket messages
   useEffect(() => {
     if (!lastMessage?.data) return;
 
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
-
     const [timeStr, openStr, highStr, lowStr, closeStr] = data.data[0];
     const newCandle = {
       time: parseInt(timeStr, 10) / 1000, // Convert timestamp to seconds

@@ -2,30 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { createChart, PriceScaleMode, en } from "lightweight-charts";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-const CandlestickChart_1 = () => {
-  const socketUrl = "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
+const CandlestickChart_1 = ({lastMessage}) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const candlestickSeriesRef = useRef(null);
   const candlesRef = useRef([]);
   const areaSeriesRef = useRef(null);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    shouldReconnect: (closeEvent) => true, // Will attempt to reconnect on all close events
-  });
-
-  // Only subscribe once when the WebSocket is first opened
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      console.log("WebSocket Connected");
-      sendMessage(
-        JSON.stringify({
-          op: "subscribe",
-          args: [{ instId: "BTC-USD-SWAP", channel: "mark-price-candle1m" }],
-        })
-      );
-    }
-  }, [readyState, sendMessage]);
 
   // Initialize the chart and series on component mount
   useEffect(() => {
@@ -45,6 +28,7 @@ const CandlestickChart_1 = () => {
       
     });
     areaSeriesRef.current = chartRef.current.addAreaSeries({
+
       topColor: 'rgba(67, 83, 254, 0.7)',
       bottomColor: 'rgba(67, 83, 254, 0.3)',
       lineColor: 'rgba(67, 83, 254, 1)',

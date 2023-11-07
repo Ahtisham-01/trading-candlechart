@@ -3,7 +3,7 @@ import CandlestickChart from "./components/candlestickChart";
 import AreaChart from "./components/areaChart";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import CandlestickChart_1 from "./components/candleChart_1";
-// import useWebSocket from "react-use-websocket";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 
 export default function Home() {
   // const socketUrl = "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
@@ -34,6 +34,21 @@ export default function Home() {
 
   // const parsedMessage = lastMessage ? JSON.parse(lastMessage.data) : null;
   // console.log(parsedMessage)
+  const socketUrl = "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+  });
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      sendMessage(
+        JSON.stringify({
+          op: "subscribe",
+          args: [{ instId: "BTC-USD-SWAP", channel: "mark-price-candle1m" }],
+        })
+      );
+    }
+  }, [readyState, sendMessage]);
   return (
     <React.Fragment>
       <div className="w-full h-screen  p-8">
@@ -41,17 +56,13 @@ export default function Home() {
         <div className="w-full   flex flex-col md:flex-row  gap-5 ">
           <div className="w-full flex flex-col gap-3  shadow-md bg-slate-50 rounded-sm p-5">
             <span className="text-3xl text-black font-bold">Candle chart</span>
-            <CandlestickChart
-            // parsedMessage={parsedMessage}
-            />
+            <CandlestickChart lastMessage={lastMessage} />
           </div>
           <div className="w-full flex flex-col gap-3  shadow-md bg-slate-50 rounded-sm p-5">
             <span className="text-3xl text-black font-bold">
               Series chart chart
             </span>
-            <AreaChart
-            // parsedMessage={parsedMessage}
-            />
+            <AreaChart lastMessage={lastMessage} />
           </div>
         </div>
         <div className="w-full p-8">
@@ -59,7 +70,7 @@ export default function Home() {
             Candle and series chart
           </span>
 
-          <CandlestickChart_1 />
+          <CandlestickChart_1 lastMessage={lastMessage} />
         </div>
       </div>
     </React.Fragment>

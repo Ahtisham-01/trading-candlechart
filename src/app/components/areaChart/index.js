@@ -1,28 +1,13 @@
 // AreaSeriesChart.js
 import React, { useEffect, useRef } from 'react';
 import { createChart, PriceScaleMode, en } from 'lightweight-charts';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 
-const AreaSeriesChart = () => {
-  const socketUrl = "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
+const AreaSeriesChart = ({lastMessage}) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    shouldReconnect: (closeEvent) => true,
-  });
 
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      sendMessage(
-        JSON.stringify({
-          op: "subscribe",
-          args: [{ instId: "BTC-USD-SWAP", channel: "mark-price-candle1m" }],
-        })
-      );
-    }
-  }, [readyState, sendMessage]);
 
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
