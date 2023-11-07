@@ -1,119 +1,75 @@
-// import React, { useEffect, useRef } from 'react';
-// import { createChart, UTCTimestamp, PriceScaleMode, en } from 'lightweight-charts';
-
-// const AreaChart = ({ data }) => {
-//   const containerRef = useRef(null);
-//   let chart = null;
-
-//   useEffect(() => {
-//     chart = createChart(containerRef.current, {
-//     //   width: '100%',
-//       height: 800,
-//       layout: { textColor: 'black', background: { type: 'solid', color: 'white' } },
-//       localization: en,
-//     });
-
-//     const areaSeries = chart.addAreaSeries({
-//       lineColor: '#2962FF',
-//       topColor: '#2962FF',
-//       bottomColor: 'rgba(41, 98, 255, 0.28)',
-//     });
-
-//     const areaData = data.map((item) => ({
-//       time: item.time, // Use timestamps in milliseconds
-//       value: item.value,
-//     }));
-
-//     areaSeries.setData(areaData);
-
-//     // Function to update the chart's dimensions on window resize
-//     const handleResize = () => {
-//       if (chart) {
-//         chart.resize(containerRef.current.clientWidth, 800); // Adjust the height as needed
-//       }
-//     };
-
-//     // Attach the resize event listener
-//     window.addEventListener('resize', handleResize);
-
-//     // Fit the chart to the container
-//     chart.timeScale().fitContent();
-
-//     return () => {
-//       // Remove the resize event listener when the component unmounts
-//       window.removeEventListener('resize', handleResize);
-
-//       if (chart) {
-//         chart.remove();
-//       }
-//     };
-//   }, [data]);
-
-//   return <div className='chart-container' ref={containerRef}></div>;
-// };
-
-// export default AreaChart;
+// AreaSeriesChart.js
 import React, { useEffect, useRef } from 'react';
-import { createChart, PriceScaleMode } from 'lightweight-charts';
+import { createChart, PriceScaleMode, en } from 'lightweight-charts';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
-const AreaChart = ({ parsedMessage }) => {
+const AreaSeriesChart = () => {
+  const socketUrl = "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
   const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const areaSeriesRef = useRef(null);
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+  });
 
   useEffect(() => {
-    const chart = createChart(containerRef.current, {
-      width: containerRef.current.clientWidth, // Set the initial width
-      height: 800,
-      layout: { textColor: 'black', backgroundColor: 'white' },
-      localization: { locale: 'en-US' },
-      priceScale: {
-        mode: PriceScaleMode.Normal,
-      },
-    });
-
-    const areaSeries = chart.addAreaSeries({
-      lineColor: '#2962FF',
-      topColor: '#2962FF',
-      bottomColor: 'rgba(41, 98, 255, 0.28)',
-    });
-
-    if (parsedMessage?.data) {
-      let areaData = parsedMessage.data[0].map(item => ({
-        time: parseFloat(item[0]), // Convert timestamp to seconds
-        value: parseFloat(item[4]), // Parse the close price as a float
-      }));
-
-      // Sort the data by time in ascending order
-      areaData = areaData.sort((a, b) => a.time - b.time);
-
-      // Ensure there are no duplicate times
-      areaData = areaData.filter((value, index, self) =>
-        index === self.findIndex((t) => t.time === value.time)
+    if (readyState === ReadyState.OPEN) {
+      sendMessage(
+        JSON.stringify({
+          op: "subscribe",
+          args: [{ instId: "BTC-USD-SWAP", channel: "mark-price-candle1m" }],
+        })
       );
-
-      areaSeries.setData(areaData);
     }
+  }, [readyState, sendMessage]);
 
-    // Function to update the chart's dimensions on window resize
-    const handleResize = () => {
-      chart.applyOptions({ width: containerRef.current.clientWidth });
-    };
-
-    // Attach the resize event listener
-    window.addEventListener('resize', handleResize);
-
-    // Fit the chart to the container
-    chart.timeScale().fitContent();
+  useEffect(() => {
+    chartRef.current = createChart(containerRef.current, {
+      width: containerRef.current.clientWidth,
+      height: 800,
+      localization: en,
+    });
+    areaSeriesRef.current = chartRef.current.addAreaSeries({
+      topColor: 'rgba(67, 83, 254, 0.7)',
+      bottomColor: 'rgba(67, 83, 254, 0.3)',
+      lineColor: 'rgba(67, 83, 254, 1)',
+      lineWidth: 2,
+    });
 
     return () => {
-      // Remove the resize event listener when the component unmounts
-      window.removeEventListener('resize', handleResize);
-      
-      // Destroy the chart instance when the component is unmounted
-      chart.remove();
+      chartRef.current.remove();
     };
-  }, [parsedMessage]);
+  }, []);
 
-  return <div ref={containerRef} className='chart-container' style={{ position: 'relative', width: '100%' }} />;
+  useEffect(() => {
+    if (!lastMessage?.data) return;
+    const data = JSON.parse(lastMessage.data);
+    if (!data || !data.data) return;
+
+    const [timeStr, , , , closeStr] = data.data[0];
+    const newPoint = {
+      time: parseInt(timeStr, 10) / 1000,
+      value: parseFloat(closeStr),
+    };
+
+    // Here you can implement logic to manage the data points, similar to how you did with the candlestick chart
+    // For simplicity, we will just set the new point for now
+    areaSeriesRef.current.update(newPoint);
+  }, [lastMessage?.data]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (chartRef.current) {
+        chartRef.current.resize(containerRef.current.clientWidth, 400);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return <div className="chart-container" ref={containerRef}></div>;
 };
 
-export default AreaChart;
+export default AreaSeriesChart;

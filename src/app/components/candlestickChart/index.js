@@ -1,87 +1,3 @@
-// import React, { useEffect, useRef, useState } from "react";
-// import { createChart, PriceScaleMode, en } from "lightweight-charts";
-
-// const CandlestickChart = ({ parsedMessage }) => {
-//   const containerRef = useRef(null);
-//   const [chart, setChart] = useState(null);
-//   const [candlestickSeries, setCandlestickSeries] = useState(null);
-//   const [candles, setCandles] = useState([]);
-
-//   useEffect(() => {
-//     const newChart = createChart(containerRef.current, {
-//       width: containerRef.current.clientWidth,
-//       height: 800,
-//       localization: en,
-//     });
-//     setChart(newChart);
-//     const newCandlestickSeries = newChart.addCandlestickSeries({
-//       timeScale: {
-//         timeVisible: true,
-//         secondsVisible: true,
-//       },
-//     });
-//     setCandlestickSeries(newCandlestickSeries);
-
-//     return () => newChart.remove(); // Clean up on component unmount
-//   }, []);
-
-//   useEffect(() => {
-//     if (!parsedMessage || !parsedMessage.data || !candlestickSeries) return;
-//     console.log(parsedMessage.data[0][0], "pppppppppppppppp");
-//     // Parse the new candle from the message
-//     const newCandle = {
-//       time: parseInt(parsedMessage.data[0][0], 10) / 1000, // Convert timestamp to seconds
-//       open: parseFloat(parsedMessage.data[0][1]),
-//       high: parseFloat(parsedMessage.data[0][2]),
-//       low: parseFloat(parsedMessage.data[0][3]),
-//       close: parseFloat(parsedMessage.data[0][4]),
-//     };
-
-//     // Update the candles state, removing duplicates and keeping only the data for the last 10 minutes
-//     setCandles((prevCandles) => {
-//       const currentTime = new Date().getTime() / 1000; // Current time in seconds
-//       const tenMinutesAgo = currentTime - 600; // Time 10 minutes ago in seconds
-
-//       // Remove outdated candles
-//       let updatedCandles = prevCandles.filter(
-//         (candle) => candle.time > tenMinutesAgo
-//       );
-
-//       // Check if the candle with the current timestamp already exists and update it; otherwise, add as a new candle
-//       const existingIndex = updatedCandles.findIndex(
-//         (candle) => candle.time === newCandle.time
-//       );
-//       if (existingIndex >= 0) {
-//         updatedCandles[existingIndex] = newCandle;
-//       } else {
-//         updatedCandles.push(newCandle);
-//       }
-
-//       return updatedCandles;
-//     });
-//   }, [parsedMessage, candlestickSeries]);
-
-//   useEffect(() => {
-//     if (candlestickSeries && candles.length) {
-//       candlestickSeries.setData(candles);
-//     }
-//   }, [candles, candlestickSeries]);
-
-//   useEffect(() => {
-//     const handleResize = () => {
-//       if (chart) {
-//         chart.resize(containerRef.current.clientWidth, 800);
-//       }
-//     };
-
-//     window.addEventListener("resize", handleResize);
-//     return () => window.removeEventListener("resize", handleResize);
-//   }, [chart]);
-
-//   return <div className="chart-container" ref={containerRef}></div>;
-// };
-
-// export default CandlestickChart;
 
 import React, { useEffect, useRef } from "react";
 import { createChart, PriceScaleMode, en } from "lightweight-charts";
@@ -117,11 +33,19 @@ const CandlestickChart = () => {
       width: containerRef.current.clientWidth,
       height: 800,
       localization: en,
+      
     });
     candlestickSeriesRef.current = chartRef.current.addCandlestickSeries({
-      timeScale: { timeVisible: true, secondsVisible: true },
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: true,
+      },
+      
     });
-
+    chartRef.current.timeScale().applyOptions({
+      barSpacing: 15, // Increase or decrease this value to adjust candle width
+      
+    });
     return () => {
       chartRef.current.remove(); // Clean up on component unmount
     };
