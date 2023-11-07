@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { createChart, PriceScaleMode, en } from "lightweight-charts";
+import { createChart, PriceScaleMode, en ,CrosshairMode } from "lightweight-charts";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 const CandlestickChart_1 = ({lastMessage}) => {
@@ -14,8 +14,33 @@ const CandlestickChart_1 = ({lastMessage}) => {
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
-      height: 800,
+      height: 400,
       localization: en,
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+        borderColor: "rgba(197, 203, 206, 0.8)",
+        textColor: "rgba(255, 255, 255, 0.9)",
+      },
+      crosshair: {
+        mode: CrosshairMode.Normal,
+      },
+      layout: {
+        background: "#1a1d29",
+        textColor: "rgba(255, 255, 255, 0.9)",
+      },
+      grid: {
+        vertLines: {
+          color: "rgba(42, 46, 57, 0)",
+        },
+        horzLines: {
+          color: "rgba(42, 46, 57, 0.6)",
+        },
+      },
+
+      priceScale: {
+        borderColor: "rgba(197, 203, 206, 0.8)",
+      },
     });
     candlestickSeriesRef.current = chartRef.current.addCandlestickSeries({
       timeScale: {

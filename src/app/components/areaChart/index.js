@@ -1,6 +1,6 @@
 // AreaSeriesChart.js
 import React, { useEffect, useRef } from 'react';
-import { createChart, PriceScaleMode, en } from 'lightweight-charts';
+import { createChart, PriceScaleMode, en , CrosshairMode } from 'lightweight-charts';
 
 const AreaSeriesChart = ({lastMessage}) => {
   const containerRef = useRef(null);
@@ -12,8 +12,33 @@ const AreaSeriesChart = ({lastMessage}) => {
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
-      height: 800,
+      height: 400,
       localization: en,
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+        borderColor: "rgba(197, 203, 206, 0.8)",
+        textColor: "rgba(255, 255, 255, 0.9)",
+      },
+      crosshair: {
+        mode: CrosshairMode.Normal,
+      },
+      layout: {
+        background: "#000000",
+        textColor: "rgba(255, 255, 255, 0.9)",
+      },
+      grid: {
+        vertLines: {
+          color: "rgba(42, 46, 57, 0)",
+        },
+        horzLines: {
+          color: "rgba(42, 46, 57, 0.6)",
+        },
+      },
+
+      priceScale: {
+        borderColor: "rgba(197, 203, 206, 0.8)",
+      },
     });
     areaSeriesRef.current = chartRef.current.addAreaSeries({
       topColor: 'rgba(67, 83, 254, 0.7)',
