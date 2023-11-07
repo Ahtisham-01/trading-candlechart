@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import {
   createChart,
-  PriceScaleMode,
   en,
   CrosshairMode,
 } from "lightweight-charts";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import LightweightCharts from "lightweight-charts";
+
 
 const CandlestickChart = ({ lastMessage }) => {
   const containerRef = useRef(null);

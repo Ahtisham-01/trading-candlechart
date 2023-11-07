@@ -1,11 +1,10 @@
-"use client";
+"use client"
 import CandlestickChart from "./components/candlestickChart";
 import AreaChart from "./components/areaChart";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {  useEffect,  useState } from "react";
 import CandlestickChart_1 from "./components/candleChart_1";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import ToggleTabs from "./components/ToggleTabs";
-import Image from "next/image";
 const tabArray = [
   {
     id: 0,
@@ -39,7 +38,7 @@ export default function Home() {
     }
   }, [readyState, sendMessage]);
   const parsedMessage = lastMessage ? JSON.parse(lastMessage.data) : null;
-  // console.log(parsedMessage, "parsedMessage");
+  console.log(parsedMessage, "parsedMessage");
   function renderingTheSteps(step) {
     switch (step) {
       case 0:

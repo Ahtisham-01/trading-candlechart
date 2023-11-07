@@ -57,7 +57,8 @@ const AreaSeriesChart = ({lastMessage}) => {
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
 
-    const [timeStr, , , closeStr] = data.data[0];
+    const [timeStr, , , , closeStr ,] = data.data[0];
+    console.log(closeStr,"closeStr")
     const newPoint = {
       time: parseInt(timeStr, 10) / 1000,
       value: parseFloat(closeStr),
