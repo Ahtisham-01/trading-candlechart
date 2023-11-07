@@ -38,7 +38,6 @@ export default function Home() {
     }
   }, [readyState, sendMessage]);
   const parsedMessage = lastMessage ? JSON.parse(lastMessage.data) : null;
-  console.log(parsedMessage, "parsedMessage");
   function renderingTheSteps(step) {
     switch (step) {
       case 0:
