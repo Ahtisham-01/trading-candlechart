@@ -92,22 +92,22 @@ export default function Home() {
             <div className="px-4 py-5 sm:p-6 border border-zinc-700 bg-black rounded-md">
               <dl>
                 <div className="flex gap-4">
-                  <dt className="text-sm font-medium leading-5 text-green-500 truncate">
+                  <div className="text-sm font-medium leading-5 text-green-500 truncate">
                     {parsedMessage?.data != undefined &&
                       `High: ${parsedMessage?.data[0][2]}`}
-                  </dt>
+                  </div>
                 </div>
-                <dd className="mt-1 text-3xl font-semibold leading-9 text-gray-400">
+                <div className="mt-1 text-3xl font-semibold leading-9 text-gray-400">
                   ${" "}
                   {parsedMessage?.data != undefined &&
                     parsedMessage?.data[0][4]}
-                </dd>
-                <dd className="font-semibold text-white">
-                  <dt className="text-sm font-medium leading-5 text-red-500 truncate">
+                </div>
+                <div className="font-semibold text-white">
+                  <div className="text-sm font-medium leading-5 text-red-500 truncate">
                     {parsedMessage?.data != undefined &&
                       `low: ${parsedMessage?.data[0][3]}`}
-                  </dt>
-                </dd>
+                  </div>
+                </div>
               </dl>
             </div>
           </div>
