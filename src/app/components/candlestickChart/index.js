@@ -18,7 +18,7 @@ const CandlestickChart = ({ lastMessage }) => {
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
-      height: 600,
+      height: 400,
       localization: en,
       timeScale: {
         timeVisible: true,
