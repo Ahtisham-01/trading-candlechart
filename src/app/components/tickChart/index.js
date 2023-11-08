@@ -59,7 +59,6 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
 
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
-
     const [timeStr, , , , closeStr] = data.data[0];
     const timeInSeconds = Math.floor(parseInt(timeStr, 10) / 1000); // make sure this is a UNIX timestamp in seconds
     const value = parseFloat(closeStr);
@@ -71,12 +70,12 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
       setLastData(newPoint); // Store the new point
       chartRef.current.timeScale().scrollToPosition(-1, false);
     } catch (e) {
-      console.error("Error updating chart:", e);
+      // console.error("Error updating chart:", e);
     }
   }, [lastMessage?.data]);
 
   useEffect(() => {
-    const updateIntervalMs = 50; // Update the chart every 50 milliseconds
+    const updateIntervalMs = 100; // Update the chart every 50 milliseconds
     let lastUpdateTime = Date.now();
     // If lastData is not null, start an interval to update the chart
     const interval = setInterval(() => {
@@ -92,7 +91,7 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
           value:
             lastData.value + (elapsedTime / 1000) * (Math.random() - 0.5) * 0.1, // Random walk for demonstration
         };
-        console.log(newValue.value, "newValue", lastData.value);
+        // console.log(newValue.value, "newValue", lastData.value);
         areaSeriesRef.current.update(newValue);
         setLastData(newValue); // Update the last known data point
       }

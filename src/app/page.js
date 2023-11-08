@@ -76,7 +76,7 @@ export default function Home() {
           return (
             <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
             <span className="text-3xl text-white font-bold">
-             Tick
+            Area chart 1s
             </span>
             <AreaChart lastMessage={lastMessage} />
 
