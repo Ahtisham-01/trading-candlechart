@@ -152,7 +152,7 @@
 //         setLastData(newValue); // Update the last known data point
 //       }
 //     }, updateIntervalMs);
-   
+
 //     return () => clearInterval(interval);
 //   }, [lastData ,markers]);
 
@@ -172,7 +172,6 @@
 
 // export default AreaSeriesChart11;
 
-
 import React, { useEffect, useRef, useState } from "react";
 import {
   createChart,
@@ -185,10 +184,10 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
-  const [lastData, setLastData] = useState(null)
- // Add state to store the previous value for interpolation
-//  const [prevData, setPrevData] = useState({ time: 0, value: 0 });
-const [markers, setMarkers] = useState([]);
+  const [lastData, setLastData] = useState(null);
+  // Add state to store the previous value for interpolation
+  //  const [prevData, setPrevData] = useState({ time: 0, value: 0 });
+  const [markers, setMarkers] = useState([]);
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
@@ -243,24 +242,25 @@ const [markers, setMarkers] = useState([]);
 
     const newPoint = { time: time, value: value };
 
-
     try {
       areaSeriesRef.current.update(newPoint);
 
       setLastData(newPoint);
-            chartRef.current.timeScale().scrollToPosition(10, false);
-          } catch (e) {
-            // console.error("Error updating chart:", e);
-          }
+      chartRef.current.timeScale().scrollToPosition(4, false);
+    } catch (e) {
+      // console.error("Error updating chart:", e);
+    }
 
-        // Update markers here
-        setMarkers([{ 
-          time: time,
-          position: 'aboveBar',
-          color: 'blue',
-          shape: 'circle',
-          id: `marker-${time}`,
-        }]);
+    // Update markers here
+    setMarkers([
+      {
+        time: time,
+        position: "aboveBar",
+        color: "blue",
+        shape: "circle",
+        id: `marker-${time}`,
+      },
+    ]);
   }, [lastMessage?.data]);
 
   useEffect(() => {
@@ -273,24 +273,24 @@ const [markers, setMarkers] = useState([]);
       // Random walk for the value to simulate live changes
       const randomWalk = lastData.value + (Math.random() - 0.5) * 0.1;
       const newValue = { time: time, value: randomWalk };
-try{
-  areaSeriesRef.current.update(newValue);
-  setLastData(newValue);
+      try {
+        areaSeriesRef.current.update(newValue);
+        setLastData(newValue);
+      } catch (e) {
+        console.log("pakra gya");
+      }
+      setMarkers([
+        {
+          time: time,
+          position: "inBar",
+          color: "blue",
+          shape: "circle",
+          id: `marker-${time}`,
+        },
+      ]);
+    }, 1); // This sets the update frequency to 1 millisecond
 
-}catch (e){
-console.log("pakra gya")
-}
-      setMarkers([{ 
-        time: time,
-        position: 'inBar',
-        color: 'blue',
-        shape: 'circle',
-        id: `marker-${time}`,
-      }]);
-    }, ); // This sets the update frequency to 1 millisecond
-  
     return () => clearInterval(interval);
-    
   }, [lastData]);
 
   useEffect(() => {
