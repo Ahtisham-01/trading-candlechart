@@ -48,7 +48,7 @@ export default function Home() {
       case 0:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">Candle chart</span>
+            <span className="text-3xl text-white font-bold">Candle chart 1m</span>
             <CandlestickChart lastMessage={lastMessage} />
           </div>
         );
@@ -67,7 +67,7 @@ export default function Home() {
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
             <span className="text-3xl text-white font-bold">
-              Area chart 
+              Area chart & candle 1m
             </span>
             <CandlestickChart_1 lastMessage={lastMessage} />
           </div>
