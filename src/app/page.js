@@ -5,6 +5,7 @@ import React, {  useEffect,  useState } from "react";
 import CandlestickChart_1 from "./components/candleChart_1";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import ToggleTabs from "./components/ToggleTabs";
+import ChartComponentTick from "./components/tickChart";
 const tabArray = [
   {
     id: 0,
@@ -12,11 +13,15 @@ const tabArray = [
   },
   {
     id: 1,
-    title: "Area Chart",
+    title: "Tick",
   },
   {
     id: 2,
     title: "Both candle & area chart ",
+  },
+  {
+    id: 3,
+    title: "Area",
   },
 ];
 
@@ -51,20 +56,32 @@ export default function Home() {
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
             <span className="text-3xl text-white font-bold">
-              Series chart chart
+           Tick
             </span>
-            <AreaChart lastMessage={lastMessage} />
+            <ChartComponentTick 
+            lastMessage={lastMessage}
+            />
           </div>
         );
       case 2:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
             <span className="text-3xl text-white font-bold">
-              Series chart chart
+              Area chart 
             </span>
             <CandlestickChart_1 lastMessage={lastMessage} />
           </div>
         );
+        case 3:
+          return (
+            <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
+            <span className="text-3xl text-white font-bold">
+             Tick
+            </span>
+            <AreaChart lastMessage={lastMessage} />
+
+          </div>
+          )
     }
   }
   return (

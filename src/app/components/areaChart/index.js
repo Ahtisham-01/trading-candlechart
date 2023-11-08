@@ -7,8 +7,6 @@ const AreaSeriesChart = ({lastMessage}) => {
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
 
-
-
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
@@ -83,3 +81,7 @@ const AreaSeriesChart = ({lastMessage}) => {
 };
 
 export default AreaSeriesChart;
+
+AreaSeriesChart.js
+
+
