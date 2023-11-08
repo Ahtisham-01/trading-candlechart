@@ -11,7 +11,9 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
   const [lastData, setLastData] = useState({ time: 0, value: 0 });
-
+ // Add state to store the previous value for interpolation
+//  const [prevData, setPrevData] = useState({ time: 0, value: 0 });
+const [markers, setMarkers] = useState([]);
   useEffect(() => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
@@ -59,6 +61,7 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
 
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
+// console.log(data,"lastMessage?.data")
     const [timeStr, , , , closeStr] = data.data[0];
     const timeInSeconds = Math.floor(parseInt(timeStr, 10) / 1000); // make sure this is a UNIX timestamp in seconds
     const value = parseFloat(closeStr);
@@ -74,8 +77,50 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
     }
   }, [lastMessage?.data]);
 
+// Cosine interpolation function
+// const cosineInterpolate = (y1, y2, mu) => {
+//   const mu2 = (1 - Math.cos(mu * Math.PI)) / 2;
+//   return (y1 * (1 - mu2)) + (y2 * mu2);
+// };
+// useEffect(() => {
+//   const updateIntervalMs = 50; // Update the chart every 50 milliseconds
+//   let lastUpdateTime = Date.now();
+
+//   const interval = setInterval(() => {
+//     const now = Date.now();
+
+//     if (lastData.time !== 0) {
+//       // Calculate elapsed time since the last update
+//       const elapsedTime = now - lastUpdateTime;
+//       lastUpdateTime = now;
+
+//       // Calculate mu for interpolation (0 <= mu <= 1)
+//       const mu = elapsedTime / updateIntervalMs;
+
+//       // Interpolate the new value using cosine interpolation
+//       const interpolatedValue = cosineInterpolate(
+//         prevData.value, // one-step previous value
+//         lastData.value, // current value
+//         mu
+//       );
+
+//       const newValue = {
+//         time: Math.floor(now / 1000), // Convert timestamp to seconds
+//         value: interpolatedValue
+//       };
+
+//       areaSeriesRef.current.update(newValue);
+//       // Update the previous value with the last known data point before updating the lastData
+//       setPrevData(lastData);
+//       setLastData(newValue); // Update the last known data point
+//     }
+//   }, updateIntervalMs);
+
+//   return () => clearInterval(interval);
+// }, [lastData]);
+
   useEffect(() => {
-    const updateIntervalMs = 100; // Update the chart every 50 milliseconds
+    const updateIntervalMs = 50; // Update the chart every 50 milliseconds
     let lastUpdateTime = Date.now();
     // If lastData is not null, start an interval to update the chart
     const interval = setInterval(() => {
@@ -91,14 +136,25 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
           value:
             lastData.value + (elapsedTime / 1000) * (Math.random() - 0.5) * 0.1, // Random walk for demonstration
         };
+        setMarkers([
+          {
+            time: newValue.time,
+            position: 'inBar', // or 'belowBar', depending on where you want it
+            color: 'blue',
+            shape: 'circle',
+            id: 'marker-id', // Optional unique identifier for the marker
+          },
+        ]);
         // console.log(newValue.value, "newValue", lastData.value);
         areaSeriesRef.current.update(newValue);
+      areaSeriesRef.current.setMarkers(markers);
+
         setLastData(newValue); // Update the last known data point
       }
     }, updateIntervalMs);
-
+   
     return () => clearInterval(interval);
-  }, [lastData]);
+  }, [lastData ,markers]);
 
   useEffect(() => {
     const handleResize = () => {
