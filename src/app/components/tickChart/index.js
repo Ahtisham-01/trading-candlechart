@@ -244,14 +244,12 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
 
     const newPoint = { time: time, value: value };
 
-    try {
+   
       areaSeriesRef.current.update(newPoint);
 
       setLastData(newPoint);
-      chartRef.current.timeScale().scrollToPosition(4, false);
-    } catch (e) {
-      // console.error("Error updating chart:", e);
-    }
+      chartRef.current.timeScale().scrollToPosition(2, false);
+ 
 
     // Update markers here
     // setMarkers([
@@ -278,12 +276,10 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
       // Update the chart with the new value
       const newValue = { time: time, value: randomWalk };
       
-      try {
+    
         areaSeriesRef.current.update(newValue);
         setLastData(newValue);
-      } catch (e) {
-        console.error("Caught an error:", e);
-      }
+   
       
       setMarkers([
         {
@@ -294,7 +290,7 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
           id: `marker-${time}`,
         },
       ]);
-    }, 100); // Update the chart every 100 milliseconds (adjust this interval as needed)
+    }, 1); // Update the chart every 100 milliseconds (adjust this interval as needed)
   
     return () => clearInterval(interval);
   }, [lastData, areaSeriesRef]);
