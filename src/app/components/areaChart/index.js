@@ -134,6 +134,11 @@ const AreaSeriesChart = ({ lastMessage }) => {
       bottomColor: "rgba(67, 83, 254, 0.3)",
       lineColor: "rgba(67, 83, 254, 1)",
       lineWidth: 2,
+      lineWidth: 2,
+      priceFormat: {
+        type: "custom",
+        formatter: (price) => price.toFixed(0), // This will round the price to no decimal places
+      },
     });
 
     return () => {

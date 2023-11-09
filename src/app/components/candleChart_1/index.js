@@ -47,6 +47,11 @@ const CandlestickChart_1 = ({lastMessage}) => {
         timeVisible: true,
         secondsVisible: true,
       },
+      lineWidth: 2,
+      priceFormat: {
+        type: "custom",
+        formatter: (price) => price.toFixed(0), // This will round the price to no decimal places
+      },
     });
     chartRef.current.timeScale().applyOptions({
       barSpacing: 15, // Increase or decrease this value to adjust candle width
@@ -58,6 +63,11 @@ const CandlestickChart_1 = ({lastMessage}) => {
       bottomColor: 'rgba(67, 83, 254, 0.3)',
       lineColor: 'rgba(67, 83, 254, 1)',
       lineWidth: 2,
+      lineWidth: 2,
+      priceFormat: {
+        type: "custom",
+        formatter: (price) => price.toFixed(0), // This will round the price to no decimal places
+      },
     });
     return () => {
       chartRef.current.remove(); // Clean up on component unmount
