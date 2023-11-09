@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart, en, CrosshairMode } from "lightweight-charts";
 
-const AreaSeriesChart11 = ({ lastMessage }) => {
+const TickChart = ({ lastMessage }) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
@@ -151,4 +151,4 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
   );
 };
 
-export default AreaSeriesChart11;
+export default TickChart;
