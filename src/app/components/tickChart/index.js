@@ -126,11 +126,10 @@ const TickChart = ({
 
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
-    console.log(data.data[0], "-------------");
     // const [timeStr, , , , closeStr] = data?.data[0];
     // const time = Math.floor(new Date(timeStr).getTime() / 1000);
     const now = Date.now();
-    const time = Math.floor(parseFloat(data?.data[0]?.ts));
+    const time = parseFloat(data?.data[0]?.ts);
     const value = parseFloat(data?.data[0]?.idxPx);
 
     const newPoint = { time: time, value: value };
