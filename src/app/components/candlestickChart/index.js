@@ -1,10 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  createChart,
-  en,
-  CrosshairMode,
-} from "lightweight-charts";
-
+import { createChart, en, CrosshairMode } from "lightweight-charts";
 
 const CandlestickChart = ({ lastMessage }) => {
   const containerRef = useRef(null);
@@ -53,8 +48,17 @@ const CandlestickChart = ({ lastMessage }) => {
     chartRef.current.timeScale().applyOptions({
       barSpacing: 15, // Increase or decrease this value to adjust candle width
     });
+    const handleResize = () => {
+      if (chartRef.current) {
+        chartRef.current.resize(containerRef.current.clientWidth, 400);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
     return () => {
       chartRef.current.remove(); // Clean up on component unmount
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
   // Update candles and chart with new WebSocket messages
@@ -93,16 +97,6 @@ const CandlestickChart = ({ lastMessage }) => {
     candlestickSeriesRef.current.setData(updatedCandles); // Update the chart
   }, [lastMessage?.data]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (chartRef.current) {
-        chartRef.current.resize(containerRef.current.clientWidth, 400);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
   return <div className="chart-container" ref={containerRef}></div>;
 };
 

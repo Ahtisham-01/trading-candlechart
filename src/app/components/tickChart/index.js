@@ -85,7 +85,7 @@ const TickChart = ({ lastMessage }) => {
       chartRef.current.remove();
       window.removeEventListener("resize", handleResize);
       if (tooltipRef.current) {
-        containerRef.current.removeChild(tooltipRef.current);
+        containerRef?.current?.removeChild(tooltipRef.current);
       }
     };
   }, []);
