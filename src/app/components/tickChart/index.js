@@ -273,7 +273,7 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
       const time = Math.floor(now / 1000);
   
       // Random walk for the value to simulate live changes
-      const randomWalk = lastData.value + Math.floor((Math.random() - 0.5) * 0.1);
+      const randomWalk = lastData.value + (Math.random() - 0.5) * 0.1;
   
       // Update the chart with the new value
       const newValue = { time: time, value: randomWalk };
