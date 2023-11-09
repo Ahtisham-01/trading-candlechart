@@ -254,35 +254,37 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
     }
 
     // Update markers here
-    setMarkers([
-      {
-        time: time,
-        position: "aboveBar",
-        color: "blue",
-        shape: "circle",
-        id: `marker-${time}`,
-      },
-    ]);
+    // setMarkers([
+    //   {
+    //     time: time,
+    //     position: "inBar",
+    //     color: "blue",
+    //     shape: "circle",
+    //     id: `marker-${time}`,
+    //   },
+    // ]);
   }, [lastMessage?.data]);
 
   useEffect(() => {
-    if (!lastData) return;
-
+    if (!lastData || !areaSeriesRef.current) return;
+  
     const interval = setInterval(() => {
       const now = Date.now();
       const time = Math.floor(now / 1000);
-
+  
       // Random walk for the value to simulate live changes
-      const randomWalk = lastData.value + (Math.random() - 0.5) * 0.1;
-      
+      const randomWalk = lastData.value + Math.floor((Math.random() - 0.5) * 0.1);
+  
+      // Update the chart with the new value
       const newValue = { time: time, value: randomWalk };
       
       try {
         areaSeriesRef.current.update(newValue);
         setLastData(newValue);
       } catch (e) {
-        console.log("pakra gya");
+        console.error("Caught an error:", e);
       }
+      
       setMarkers([
         {
           time: time,
@@ -292,10 +294,12 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
           id: `marker-${time}`,
         },
       ]);
-    }, 1); // This sets the update frequency to 1 millisecond
-
+    }, 100); // Update the chart every 100 milliseconds (adjust this interval as needed)
+  
     return () => clearInterval(interval);
-  }, [lastData]);
+  }, [lastData, areaSeriesRef]);
+  
+  
 
   useEffect(() => {
     const handleResize = () => {
