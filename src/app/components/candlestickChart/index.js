@@ -93,19 +93,16 @@ const CandlestickChart = ({ lastMessage }) => {
     candlestickSeriesRef.current.setData(updatedCandles); // Update the chart
   }, [lastMessage?.data]);
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const currentChart = chartRef.current;
-      if (currentChart) {
-        currentChart.resize(containerRef.current.clientWidth, 800);
+      if (chartRef.current) {
+        chartRef.current.resize(containerRef.current.clientWidth, 400);
       }
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return <div className="chart-container" ref={containerRef}></div>;
 };
 

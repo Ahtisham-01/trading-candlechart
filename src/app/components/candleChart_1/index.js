@@ -112,9 +112,8 @@ const CandlestickChart_1 = ({lastMessage}) => {
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const currentChart = chartRef.current;
-      if (currentChart) {
-        currentChart.resize(containerRef.current.clientWidth, 800);
+      if (chartRef.current) {
+        chartRef.current.resize(containerRef.current.clientWidth, 400);
       }
     };
 
