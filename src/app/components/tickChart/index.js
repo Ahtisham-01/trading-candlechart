@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart, en, CrosshairMode } from "lightweight-charts";
+import useWebSocket from "react-use-websocket";
 
-const TickChart = ({ lastMessage }) => {
+const TickChart = ({
+  tickerChannel = "index-tickers",
+  tickerInstId = "BTC-USDT",
+}) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
@@ -11,6 +15,29 @@ const TickChart = ({ lastMessage }) => {
   const [markers, setMarkers] = useState([]);
   const tooltipRef = useRef(null); // Ref for the tooltip element
 
+  const SOCKET_URL = "wss://wspap.okx.com:8443/ws/v5/public";
+  const { sendMessage, lastMessage } = useWebSocket(SOCKET_URL, {
+    onOpen: () => console.log("WebSocket Connected"),
+    // Will attempt to reconnect on all close events
+    shouldReconnect: (closeEvent) => true,
+  });
+
+  // Send the subscription message when the component mounts
+  useEffect(() => {
+    const message = {
+      op: "subscribe",
+      args: [
+        {
+          channel: tickerChannel,
+          instId: tickerInstId,
+        },
+      ],
+    };
+    sendMessage(JSON.stringify(message));
+  }, [tickerInstId, sendMessage]);
+
+  // const parsedMessage = lastMessage ? JSON.parse(lastMessage.data) : null;
+  // console.log(parsedMessage?.data)
   useEffect(() => {
     if (containerRef.current) {
       const tooltip = document.createElement("div");
@@ -52,6 +79,10 @@ const TickChart = ({ lastMessage }) => {
       bottomColor: "rgba(67, 83, 254, 0.3)",
       lineColor: "rgba(67, 83, 254, 1)",
       lineWidth: 2,
+      priceFormat: {
+        type: "custom",
+        formatter: (price) => price.toFixed(0), // This will round the price to no decimal places
+      },
     });
 
     chartRef.current.subscribeCrosshairMove(function (param) {
@@ -95,50 +126,58 @@ const TickChart = ({ lastMessage }) => {
 
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
-
-    const [timeStr, , , , closeStr] = data.data[0];
+    console.log(data.data[0], "-------------");
+    // const [timeStr, , , , closeStr] = data?.data[0];
     // const time = Math.floor(new Date(timeStr).getTime() / 1000);
     const now = Date.now();
-    const time = Math.floor(now / 1000);
-    const value = parseFloat(closeStr);
+    const time = Math.floor(parseFloat(data?.data[0]?.ts));
+    const value = parseFloat(data?.data[0]?.idxPx);
 
     const newPoint = { time: time, value: value };
 
     areaSeriesRef.current.update(newPoint);
-
+    setMarkers([
+            {
+              time: time,
+              position: "inBar",
+              color: "blue",
+              shape: "circle",
+              id: `marker-${time}`,
+            },
+          ]);
     setLastData(newPoint);
     chartRef.current.timeScale().scrollToPosition(2, false);
   }, [lastMessage?.data]);
 
-  useEffect(() => {
-    if (!lastData || !areaSeriesRef.current) return;
+  // useEffect(() => {
+  //   if (!lastData || !areaSeriesRef.current) return;
 
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const time = Math.floor(now / 1000);
+  //   const interval = setInterval(() => {
+  //     const now = Date.now();
+  //     const time = Math.floor(now / 1000);
 
-      // Random walk for the value to simulate live changes
-      const randomWalk = lastData.value + (Math.random() - 0.5) * 0.1;
+  //     // Random walk for the value to simulate live changes
+  //     const randomWalk = lastData.value + (Math.random() - 0.5) * 0.1;
 
-      // Update the chart with the new value
-      const newValue = { time: time, value: randomWalk };
+  //     // Update the chart with the new value
+  //     const newValue = { time: time, value: randomWalk };
 
-      areaSeriesRef.current.update(newValue);
-      setLastData(newValue);
+  //     areaSeriesRef?.current?.update(newValue);
+  //     setLastData(newValue);
 
-      setMarkers([
-        {
-          time: time,
-          position: "inBar",
-          color: "blue",
-          shape: "circle",
-          id: `marker-${time}`,
-        },
-      ]);
-    }, 1); // Update the chart every 100 milliseconds (adjust this interval as needed)
+  //     setMarkers([
+  //       {
+  //         time: time,
+  //         position: "inBar",
+  //         color: "blue",
+  //         shape: "circle",
+  //         id: `marker-${time}`,
+  //       },
+  //     ]);
+  //   }, 1); // Update the chart every 100 milliseconds (adjust this interval as needed)
 
-    return () => clearInterval(interval);
-  }, [lastData, areaSeriesRef]);
+  //   return () => clearInterval(interval);
+  // }, [lastData, areaSeriesRef]);
 
   useEffect(() => {
     // Apply markers to the chart

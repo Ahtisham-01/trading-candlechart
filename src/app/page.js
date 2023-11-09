@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import CandlestickChart from "./components/candlestickChart";
 import AreaChart from "./components/areaChart";
-import React, {  useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import CandlestickChart_1 from "./components/candleChart_1";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import ToggleTabs from "./components/ToggleTabs";
@@ -42,25 +42,25 @@ export default function Home() {
       );
     }
   }, [readyState, sendMessage]);
+
+  
   const parsedMessage = lastMessage ? JSON.parse(lastMessage.data) : null;
   function renderingTheSteps(step) {
     switch (step) {
       case 0:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">Candle chart 1m</span>
+            <span className="text-3xl text-white font-bold">
+              Candle chart 1m
+            </span>
             <CandlestickChart lastMessage={lastMessage} />
           </div>
         );
       case 1:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">
-           Tick
-            </span>
-            <ChartComponentTick 
-            lastMessage={lastMessage}
-            />
+            <span className="text-3xl text-white font-bold">Tick</span>
+            <ChartComponentTick lastMessage={lastMessage} />
           </div>
         );
       case 2:
@@ -72,16 +72,13 @@ export default function Home() {
             <CandlestickChart_1 lastMessage={lastMessage} />
           </div>
         );
-        case 3:
-          return (
-            <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">
-            Area chart 1s
-            </span>
+      case 3:
+        return (
+          <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
+            <span className="text-3xl text-white font-bold">Area chart 1s</span>
             <AreaChart lastMessage={lastMessage} />
-
           </div>
-          )
+        );
     }
   }
   return (

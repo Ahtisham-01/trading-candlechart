@@ -44,6 +44,10 @@ const CandlestickChart = ({ lastMessage }) => {
         timeVisible: true,
         secondsVisible: true,
       },
+      priceFormat: {
+        type: "custom",
+        formatter: (price) => price.toFixed(0), // This will round the price to no decimal places
+      },
     });
     chartRef.current.timeScale().applyOptions({
       barSpacing: 15, // Increase or decrease this value to adjust candle width
