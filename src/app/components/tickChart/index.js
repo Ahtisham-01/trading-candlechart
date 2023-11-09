@@ -237,9 +237,12 @@ const AreaSeriesChart11 = ({ lastMessage }) => {
     if (!data || !data.data) return;
 
     const [timeStr, , , , closeStr] = data.data[0];
-    const time = Math.floor(new Date(timeStr).getTime() / 1000);
+    // const time = Math.floor(new Date(timeStr).getTime() / 1000);
+    const now = Date.now();
+    const time = Math.floor(now / 1000);
     const value = parseFloat(closeStr);
-
+    console.log(time, "time");
+    console.log(value, "value");
     const newPoint = { time: time, value: value };
 
     try {
