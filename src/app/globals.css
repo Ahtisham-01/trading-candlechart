@@ -16,7 +16,7 @@ body {
   z-index: 1000;
   position: absolute;
   display: none;
-  color: "#fff";
+  color: #fff;
   background: rgba(67, 83, 254, 0.9);
   border: none;
   padding: 10px 15px;
