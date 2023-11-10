@@ -142,7 +142,7 @@ const TickChart = ({
               id: `marker-${time}`,
             },
           ]);
-    chartRef.current.timeScale().scrollToPosition(2, false);
+    // chartRef.current.timeScale().scrollToPosition(2, false);
   }, [lastMessage?.data]);
 
   useEffect(() => {
