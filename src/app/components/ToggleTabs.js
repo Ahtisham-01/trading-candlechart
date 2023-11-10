@@ -20,13 +20,13 @@ const ToggleTabs = ({ children, tabArray = [], setActiveTab, activeTab, }) => {
             <div className='flex flex-col gap-[46px] py-8'>
                 <div>
                     <div className="relative">
-                        <div className="w-full border-b flex gap-12  border-zinc-700">
+                        <div className="w-full border-b flex gap-4 md:gap-12  border-zinc-700">
                             {tabArray.map((tab, idx) => {
                                 return (
                                     <button
                                         key={idx}
                                         ref={(el) => (tabsRef.current[idx] = el)}
-                                        className={` px-[10px] py-3 text-2xl text-zinc-400 !leading-none font-[600]`}
+                                        className={` px-[10px] py-3 text-sm md:text-base 2xl:text-2xl text-zinc-400 !leading-none font-[600]`}
                                         onClick={() => setActiveTab(idx)}>
                                         {tab.title}
                                     </button>

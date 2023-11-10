@@ -9,7 +9,7 @@ import ChartComponentTick from "./components/tickChart";
 const tabArray = [
   {
     id: 0,
-    title: "Candlestick Chart",
+    title: "Candlestick",
   },
   {
     id: 1,
@@ -17,7 +17,7 @@ const tabArray = [
   },
   {
     id: 2,
-    title: "Both candle & area chart ",
+    title: "Both",
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ export default function Home() {
       case 0:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">
+            <span className="text-lg md:text-3xl text-white font-bold">
               Candle chart 1m
             </span>
             <CandlestickChart lastMessage={lastMessage} />
@@ -59,14 +59,14 @@ export default function Home() {
       case 1:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">Tick</span>
+            <span className="text-lg md:text-3xl text-white font-bold">Tick</span>
             <ChartComponentTick lastMessage={lastMessage} />
           </div>
         );
       case 2:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">
+            <span className="text-lg md:text-3xl text-white font-bold">
               Area chart & candle 1m
             </span>
             <CandlestickChart_1 lastMessage={lastMessage} />
@@ -75,7 +75,7 @@ export default function Home() {
       case 3:
         return (
           <div className="w-full flex flex-col gap-3  shadow-md border border-zinc-700 bg-black rounded-md p-5">
-            <span className="text-3xl text-white font-bold">Area chart 1s</span>
+            <span className="text-lg md:text-3xl text-white font-bold">Area chart 1s</span>
             <AreaChart lastMessage={lastMessage} />
           </div>
         );
@@ -84,18 +84,18 @@ export default function Home() {
   return (
     <React.Fragment>
       <div className="w-full h-screen  p-8">
-        <div className="flex justify-between  rounded-lg shadow  border-zinc-700 border bg-black items-center w-full container mx-auto">
+        <div className="flex flex-col md:flex-row  justify-between  rounded-lg shadow  border-zinc-700 border bg-black items-center w-full container mx-auto">
           <div className="flex gap-2 w-full items-center">
             <img
               src="/app-mobile-logo.png"
               alt="btc logo"
               className=" w-24 h-24 rounded-full"
             />
-            <p className="text-5xl text-center py-4  text-white font-bold">
+            <p className=" text-base 2xl:text-5xl text-center py-4  text-white font-bold">
               MT TRADING
             </p>
           </div>
-          <div className="relative m-8  bg-black rounded-lg shadow w-62 w-full ">
+          <div className="relative md:m-8  bg-black rounded-lg shadow md:w-62 w-full p-2">
             <img
               src="https://img.clankapp.com/symbol/btc.svg"
               alt="btc logo"

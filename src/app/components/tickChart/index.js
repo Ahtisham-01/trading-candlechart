@@ -145,36 +145,6 @@ const TickChart = ({
     chartRef.current.timeScale().scrollToPosition(2, false);
   }, [lastMessage?.data]);
 
-  // useEffect(() => {
-  //   if (!lastData || !areaSeriesRef.current) return;
-
-  //   const interval = setInterval(() => {
-  //     const now = Date.now();
-  //     const time = Math.floor(now / 1000);
-
-  //     // Random walk for the value to simulate live changes
-  //     const randomWalk = lastData.value + (Math.random() - 0.5) * 0.1;
-
-  //     // Update the chart with the new value
-  //     const newValue = { time: time, value: randomWalk };
-
-  //     areaSeriesRef?.current?.update(newValue);
-  //     setLastData(newValue);
-
-  //     setMarkers([
-  //       {
-  //         time: time,
-  //         position: "inBar",
-  //         color: "blue",
-  //         shape: "circle",
-  //         id: `marker-${time}`,
-  //       },
-  //     ]);
-  //   }, 1); // Update the chart every 100 milliseconds (adjust this interval as needed)
-
-  //   return () => clearInterval(interval);
-  // }, [lastData, areaSeriesRef]);
-
   useEffect(() => {
     // Apply markers to the chart
     if (areaSeriesRef.current && markers.length > 0) {
