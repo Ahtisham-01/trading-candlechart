@@ -9,9 +9,7 @@ const TickChart = ({
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
-  const [lastData, setLastData] = useState(null);
-  // Add state to store the previous value for interpolation
-  //  const [prevData, setPrevData] = useState({ time: 0, value: 0 });
+  
   const [markers, setMarkers] = useState([]);
   const tooltipRef = useRef(null); // Ref for the tooltip element
 
@@ -144,7 +142,6 @@ const TickChart = ({
               id: `marker-${time}`,
             },
           ]);
-    setLastData(newPoint);
     chartRef.current.timeScale().scrollToPosition(2, false);
   }, [lastMessage?.data]);
 
