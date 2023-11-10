@@ -89,7 +89,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   createChart,
   PriceScaleMode,
-  en,
   CrosshairMode,
 } from "lightweight-charts";
 
@@ -103,7 +102,7 @@ const AreaSeriesChart = ({ lastMessage }) => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
       height: 400,
-      localization: en,
+      // localization: en,
       timeScale: {
         timeVisible: true,
         secondsVisible: false,

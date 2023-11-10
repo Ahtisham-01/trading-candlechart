@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { createChart, en, CrosshairMode } from "lightweight-charts";
+import { createChart, CrosshairMode } from "lightweight-charts";
 
 const CandlestickChart = ({ lastMessage }) => {
   const containerRef = useRef(null);
@@ -12,7 +12,7 @@ const CandlestickChart = ({ lastMessage }) => {
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
       height: 400,
-      localization: en,
+      // localization: en,
       timeScale: {
         timeVisible: true,
         secondsVisible: false,

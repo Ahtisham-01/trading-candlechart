@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createChart, en, CrosshairMode } from "lightweight-charts";
+
+import { createChart, CrosshairMode } from "lightweight-charts";
 import useWebSocket from "react-use-websocket";
 
 const TickChart = ({
@@ -9,8 +10,8 @@ const TickChart = ({
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
-  
-  const [markers, setMarkers] = useState([]);
+
+  const markersRef = useRef([]);
   const tooltipRef = useRef(null); // Ref for the tooltip element
 
   const SOCKET_URL = "wss://wspap.okx.com:8443/ws/v5/public";
@@ -34,8 +35,6 @@ const TickChart = ({
     sendMessage(JSON.stringify(message));
   }, [tickerInstId, sendMessage]);
 
-  // const parsedMessage = lastMessage ? JSON.parse(lastMessage.data) : null;
-  // console.log(parsedMessage?.data)
   useEffect(() => {
     if (containerRef.current) {
       const tooltip = document.createElement("div");
@@ -46,10 +45,10 @@ const TickChart = ({
     chartRef.current = createChart(containerRef.current, {
       width: containerRef.current.clientWidth,
       height: 400,
-      localization: en,
+      // localization: en,
       timeScale: {
         timeVisible: true,
-        secondsVisible: false,
+        secondsVisible: true,
         borderColor: "rgba(197, 203, 206, 0.8)",
         textColor: "rgba(255, 255, 255, 0.9)",
       },
@@ -96,7 +95,7 @@ const TickChart = ({
       }
 
       tooltipRef.current.innerHTML = `Time: ${new Date(
-        param.time
+        param.time * 1000
       ).toLocaleString()}<br>Value: ${seriesData.value}`;
       tooltipRef.current.style.display = "block";
       tooltipRef.current.style.left = `${param.point.x + 20}px`;
@@ -121,36 +120,28 @@ const TickChart = ({
 
   useEffect(() => {
     if (!lastMessage?.data) return;
-
+  
     const data = JSON.parse(lastMessage.data);
     if (!data || !data.data) return;
-    // const [timeStr, , , , closeStr] = data?.data[0];
-    // const time = Math.floor(new Date(timeStr).getTime() / 1000);
-    const now = Date.now();
-    const time = parseFloat(data?.data[0]?.ts);
+    const time = Math.floor(parseFloat(data?.data[0]?.ts) / 1000);
     const value = parseFloat(data?.data[0]?.idxPx);
-
+  
     const newPoint = { time: time, value: value };
-
     areaSeriesRef.current.update(newPoint);
-    setMarkers([
-            {
-              time: time,
-              position: "inBar",
-              color: "blue",
-              shape: "circle",
-              id: `marker-${time}`,
-            },
-          ]);
-    // chartRef.current.timeScale().scrollToPosition(2, false);
+  
+    // Clear the existing markers and add a new one for the latest data point
+    markersRef.current = [{
+      time: time,
+      position: "inBar",
+      color: "blue",
+      shape: "circle",
+      id: `marker-${time}`,
+    }];
+  
+    areaSeriesRef.current.setMarkers(markersRef.current);
   }, [lastMessage?.data]);
+  
 
-  useEffect(() => {
-    // Apply markers to the chart
-    if (areaSeriesRef.current && markers.length > 0) {
-      areaSeriesRef.current.setMarkers(markers);
-    }
-  }, [markers]);
   return (
     <div className="chart-container relative z-0" ref={containerRef}></div>
   );
